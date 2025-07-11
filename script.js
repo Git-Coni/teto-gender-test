@@ -1,4 +1,4 @@
-fetch("http://coni.iptime.org:4000/api/test")
+fetch("http://coni.iptime.org/api/test")
   .then((res) => res.json())
   .then((data) => {
     document.getElementById(
