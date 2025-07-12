@@ -57,6 +57,9 @@ export const LanguageProvider = ({ children }) => {
           "result.not_found":
             "Could not retrieve results. Please take the survey again.",
           "result.go_home_button": "Retake Survey",
+          "result.save_button": "Save Result",
+          "result.share_button": "Share",
+          "result.share_copied": "Link copied to clipboard",
           "app.dark_mode_button": "Dark Mode",
           "app.light_mode_button": "Light Mode",
         });

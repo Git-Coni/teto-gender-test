@@ -6,6 +6,7 @@ import {
   Heading,
   Center,
   Button,
+  Stack,
   useColorModeValue,
   Image,
 } from "@chakra-ui/react";
@@ -14,7 +15,25 @@ import { useLanguage } from "../utils/LanguageContext";
 const Result = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { result } = location.state || {};
+  const { result: stateResult } = location.state || {};
+  let result = stateResult;
+  if (!result) {
+    let params = new URLSearchParams(location.search);
+    let data = params.get("data");
+    // In some hash-routing setups search may be empty, so also check the hash
+    if (!data && window.location.hash.includes("?")) {
+      params = new URLSearchParams(window.location.hash.split("?")[1]);
+      data = params.get("data");
+    }
+    if (data) {
+      try {
+        const decoded = decodeURIComponent(escape(atob(data)));
+        result = JSON.parse(decoded);
+      } catch (err) {
+        console.error("Failed to decode shared result", err);
+      }
+    }
+  }
   const { translations } = useLanguage();
 
   const cardBg = useColorModeValue("white", "gray.700");
@@ -47,6 +66,49 @@ const Result = () => {
     });
 
     return translatedText.replace(/\n/g, "<br>");
+  };
+
+  const handleSave = () => {
+    if (!result) return;
+    const data = JSON.stringify(result, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "result.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleShare = async () => {
+    if (!result) return;
+    const titleKey = `result.${result.type}-title`;
+    const title =
+      translations[titleKey] || translations["result.title"] || "Your Type";
+    const json = JSON.stringify(result);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
+    const shareData = {
+      title,
+      text: title,
+      url: shareUrl,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing", err);
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        alert(
+          translations["result.share_copied"] || "Link copied to clipboard"
+        );
+      } catch (err) {
+        console.error("Clipboard write failed", err);
+      }
+    }
   };
 
   if (!result) {
@@ -140,9 +202,17 @@ const Result = () => {
           </Text>
         </Box>
       </Box>
-      <Button mt={8} colorScheme='green' onClick={() => navigate("/")}>
-        {translations["result.go_home_button"] || "Retake Survey"}
-      </Button>
+      <Stack mt={8} spacing={4} direction='row' justify='center'>
+        <Button colorScheme='blue' onClick={handleSave}>
+          {translations["result.save_button"] || "Save Result"}
+        </Button>
+        <Button colorScheme='teal' onClick={handleShare}>
+          {translations["result.share_button"] || "Share"}
+        </Button>
+        <Button colorScheme='green' onClick={() => navigate("/")}>
+          {translations["result.go_home_button"] || "Retake Survey"}
+        </Button>
+      </Stack>
     </Center>
   );
 };
