@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -7,10 +7,15 @@ import {
   Center,
   Button,
   Stack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
   useColorModeValue,
   Image,
 } from "@chakra-ui/react";
 import { useLanguage } from "../utils/LanguageContext";
+import html2canvas from "html2canvas";
 
 const Result = () => {
   const location = useLocation();
@@ -52,6 +57,10 @@ const Result = () => {
     ? process.env.PUBLIC_URL + "/images/" + typeToImage[result.type]
     : "";
 
+  const resultTitleKey = result
+    ? `result.${result.type}-title`
+    : "result.title";
+
   const formatAndTranslateText = (text, type) => {
     if (!text || !type) return "";
 
@@ -68,14 +77,68 @@ const Result = () => {
     return translatedText.replace(/\n/g, "<br>");
   };
 
-  const handleSave = () => {
+  const resultRef = useRef(null);
+
+  const copyText = async () => {
     if (!result) return;
-    const data = JSON.stringify(result, null, 2);
-    const blob = new Blob([data], { type: "application/json" });
+    const textParts = [];
+    const title =
+      translations[resultTitleKey] ||
+      translations["result.title"] ||
+      "Your Type";
+    const explanationLabel =
+      translations["result.explanation_label"] || "Explanation";
+    const adviceLabel =
+      translations["result.advice_label"] || "Advice";
+    const romanceLabel =
+      translations["result.romance_label"] || "Romance";
+    textParts.push(title);
+    textParts.push("\n" + explanationLabel);
+    textParts.push(
+      formatAndTranslateText(result.explanation, result.type).replace(/<br>/g, "\n")
+    );
+    textParts.push("\n" + adviceLabel);
+    textParts.push(
+      formatAndTranslateText(result.advice, result.type).replace(/<br>/g, "\n")
+    );
+    textParts.push("\n" + romanceLabel);
+    textParts.push(
+      formatAndTranslateText(result.love_chain_info, result.type).replace(/<br>/g, "\n")
+    );
+    const text = textParts.join("\n\n");
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy text", err);
+    }
+  };
+
+  const saveAsImage = async () => {
+    if (!resultRef.current) return;
+    try {
+      const canvas = await html2canvas(resultRef.current);
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "result.png";
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+    } catch (err) {
+      console.error("Failed to save image", err);
+    }
+  };
+
+  const saveAsHtml = () => {
+    if (!resultRef.current) return;
+    const htmlContent = resultRef.current.outerHTML;
+    const blob = new Blob([htmlContent], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "result.json";
+    link.download = "result.html";
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -126,8 +189,6 @@ const Result = () => {
       </Center>
     );
   }
-
-  const resultTitleKey = `result.${result.type}-title`;
 
   return (
     <Center minH='100vh' py={8} flexDirection='column' textAlign='center'>
@@ -203,9 +264,22 @@ const Result = () => {
         </Box>
       </Box>
       <Stack mt={8} spacing={4} direction='row' justify='center'>
-        <Button colorScheme='blue' onClick={handleSave}>
-          {translations["result.save_button"] || "Save Result"}
-        </Button>
+        <Menu>
+          <MenuButton as={Button} colorScheme='blue'>
+            {translations["result.save_button"] || "Save Result"}
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={copyText}>
+              {translations["result.copy_text"] || "Copy Text"}
+            </MenuItem>
+            <MenuItem onClick={saveAsImage}>
+              {translations["result.save_image"] || "Save as Image"}
+            </MenuItem>
+            <MenuItem onClick={saveAsHtml}>
+              {translations["result.save_html"] || "Save as HTML"}
+            </MenuItem>
+          </MenuList>
+        </Menu>
         <Button colorScheme='teal' onClick={handleShare}>
           {translations["result.share_button"] || "Share"}
         </Button>
@@ -218,3 +292,4 @@ const Result = () => {
 };
 
 export default Result;
+
