@@ -40,7 +40,9 @@ const Survey = () => {
         return;
       }
       try {
-        const response = await fetch(`/api/questions?lang=${lang}`);
+        const response = await fetch(
+          `https://coni.myds.me/api/questions?lang=${lang}`
+        );
         if (!response.ok) {
           throw new Error("질문을 불러오는 데 실패했습니다.");
         }
