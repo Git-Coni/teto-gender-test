@@ -14,19 +14,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x" # Node.js 버전
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build # 프로젝트 빌드 스크립트 실행
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # (필요시 빌드 스크립트 삽입)
-      # - name: Build
-      #   run: npm install && npm run build
-
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "." # 정적 콘텐츠 디렉토리. 예: ./dist 또는 _site
+          path: "./build" # 빌드된 정적 콘텐츠 디렉토리
 
   deploy:
     runs-on: ubuntu-latest

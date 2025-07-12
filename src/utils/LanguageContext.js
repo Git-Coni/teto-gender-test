@@ -3,7 +3,7 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 const LanguageContext = createContext();
 
 const getInitialLanguage = () => {
-  const supportedLangs = ["ko", "en", "ja", "vn"];
+  const supportedLangs = ["ko", "en", "jp", "vn"];
   const browserLang = navigator.language.split("-")[0];
   if (supportedLangs.includes(browserLang)) {
     return browserLang;
