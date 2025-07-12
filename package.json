@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "https://coni.myds.me",
-  "homepage": "https://Git-Coni.github.io/teto-gender-test",
+  "homepage": "https://test.coniteck.cc",
   "dependencies": {
     "@chakra-ui/react": "^2.10.9",
     "@emotion/react": "^11.14.0",
