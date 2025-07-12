@@ -33,6 +33,23 @@ const Result = () => {
     ? process.env.PUBLIC_URL + "/images/" + typeToImage[result.type]
     : "";
 
+  const formatAndTranslateText = (text, type) => {
+    if (!text || !type) return "";
+
+    const allTypes = ["teto-boy", "teto-girl", "egen-boy", "egen-girl"];
+    let translatedText = text;
+
+    // 모든 유형 이름에 대해 번역을 수행합니다.
+    allTypes.forEach((t) => {
+      const translatedTypeName = translations[`result.type.${t}`] || t;
+      const regex = new RegExp(t, "g");
+      translatedText = translatedText.replace(regex, translatedTypeName);
+    });
+
+    // 마지막으로 줄바꿈을 <br> 태그로 변환합니다.
+    return translatedText.replace(/\n/g, "<br>");
+  };
+
   if (!result) {
     return (
       <Center minH='100vh'>
@@ -69,24 +86,60 @@ const Result = () => {
             "Your Type"}
         </Heading>
         <Box textAlign='left'>
+          {/* 설명 섹션 */}
+          <Heading
+            as='h3'
+            size='md'
+            mb={2}
+            textAlign='center'
+            color={labelColor}
+          >
+            [{translations["result.explanation_label"] || "Explanation"}]
+          </Heading>
           <Text fontSize='md' mb={4}>
-            <Text as='span' fontWeight='bold' color={labelColor}>
-              {translations["result.explanation_label"] || "Explanation:"}
-            </Text>
-            <span dangerouslySetInnerHTML={{ __html: result.explanation }} />
-          </Text>
-          <Text fontSize='md' mb={4}>
-            <Text as='span' fontWeight='bold' color={labelColor}>
-              {translations["result.advice_label"] || "Advice:"}
-            </Text>
-            <span dangerouslySetInnerHTML={{ __html: result.advice }} />
-          </Text>
-          <Text fontSize='md'>
-            <Text as='span' fontWeight='bold' color={labelColor}>
-              {translations["result.love_chain_label"] || "Love Chain:"}
-            </Text>
             <span
-              dangerouslySetInnerHTML={{ __html: result.love_chain_info }}
+              dangerouslySetInnerHTML={{
+                __html: formatAndTranslateText(result.explanation, result.type),
+              }}
+            />
+          </Text>
+
+          {/* 조언 섹션 */}
+          <Heading
+            as='h3'
+            size='md'
+            mb={2}
+            textAlign='center'
+            color={labelColor}
+          >
+            [{translations["result.advice_label"] || "Advice"}]
+          </Heading>
+          <Text fontSize='md' mb={4}>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: formatAndTranslateText(result.advice, result.type),
+              }}
+            />
+          </Text>
+
+          {/* 연예 섹션 */}
+          <Heading
+            as='h3'
+            size='md'
+            mb={2}
+            textAlign='center'
+            color={labelColor}
+          >
+            [{translations["result.romance_label"] || "Romance"}]
+          </Heading>
+          <Text fontSize='md'>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: formatAndTranslateText(
+                  result.love_chain_info,
+                  result.type
+                ),
+              }}
             />
           </Text>
         </Box>
