@@ -41,7 +41,8 @@ const Result = () => {
 
     allTypes.forEach((t) => {
       const translatedTypeName = translations[`result.type.${t}`] || t;
-      const regex = new RegExp(t, "g");
+      // 'g' (전역) 플래그와 'i' (대소문자 구분 없음) 플래그를 모두 사용합니다.
+      const regex = new RegExp(t, "gi");
       translatedText = translatedText.replace(regex, translatedTypeName);
     });
 
