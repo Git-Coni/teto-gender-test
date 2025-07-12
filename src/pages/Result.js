@@ -27,7 +27,8 @@ const Result = () => {
     }
     if (data) {
       try {
-        result = JSON.parse(atob(data));
+        const decoded = decodeURIComponent(escape(atob(data)));
+        result = JSON.parse(decoded);
       } catch (err) {
         console.error("Failed to decode shared result", err);
       }
@@ -84,7 +85,8 @@ const Result = () => {
     const titleKey = `result.${result.type}-title`;
     const title =
       translations[titleKey] || translations["result.title"] || "Your Type";
-    const encoded = btoa(JSON.stringify(result));
+    const json = JSON.stringify(result);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
     const shareUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
     const shareData = {
       title,
@@ -200,12 +202,7 @@ const Result = () => {
           </Text>
         </Box>
       </Box>
-      <Stack
-        mt={8}
-        spacing={4}
-        direction={{ base: "column", md: "row" }}
-        justify='center'
-      >
+      <Stack mt={8} spacing={4} direction='row' justify='center'>
         <Button colorScheme='blue' onClick={handleSave}>
           {translations["result.save_button"] || "Save Result"}
         </Button>
