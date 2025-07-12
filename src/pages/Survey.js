@@ -105,6 +105,7 @@ const Survey = () => {
         body: JSON.stringify({
           gender,
           answers: { ...answers, ...freeTextAnswers },
+          lang,
         }),
       });
 

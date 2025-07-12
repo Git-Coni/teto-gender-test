@@ -7,6 +7,7 @@ import {
   Center,
   Button,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import { useLanguage } from "../utils/LanguageContext";
 
@@ -16,12 +17,21 @@ const Result = () => {
   const { result } = location.state || {};
   const { translations } = useLanguage();
 
-  // 모든 훅은 컴포넌트 최상단에서 호출됩니다.
   const cardBg = useColorModeValue("white", "gray.700");
   const textColor = useColorModeValue("gray.600", "gray.400");
   const headingColor = useColorModeValue("gray.800", "white");
   const labelColor = useColorModeValue("gray.800", "white");
   const headingColorValue = useColorModeValue("blue.500", "blue.300");
+
+  const typeToImage = {
+    "egen-boy": "egen-boy.png",
+    "egen-girl": "egen-girl.png",
+    "teto-boy": "teto-boy.png",
+    "teto-girl": "teto-girl.png",
+  };
+  const imageUrl = result
+    ? process.env.PUBLIC_URL + "/images/" + typeToImage[result.type]
+    : "";
 
   if (!result) {
     return (
@@ -39,10 +49,14 @@ const Result = () => {
     );
   }
 
+  const resultTitleKey = `result.${result.type}-title`;
+
   return (
     <Center minH='100vh' py={8} flexDirection='column' textAlign='center'>
       <Heading as='h1' size='xl' mb={4} color={headingColor}>
-        {translations["result.title"] || "Your Type Is..."}
+        {translations[resultTitleKey] ||
+          translations["result.title"] ||
+          "Your Type Is..."}
       </Heading>
       <Box
         p={8}
@@ -53,21 +67,30 @@ const Result = () => {
         boxShadow='xl'
         color={textColor}
       >
+        <Image src={imageUrl} alt={translations[resultTitleKey]} mb={6} />
         <Heading as='h2' size='lg' mb={4} color={headingColorValue}>
           {result.type}
         </Heading>
         <Box textAlign='left'>
-          <Text fontSize='md' mb={2}>
+          <Text fontSize='md' mb={4}>
             <Text as='span' fontWeight='bold' color={labelColor}>
               {translations["result.explanation_label"] || "Explanation:"}
             </Text>
             <span dangerouslySetInnerHTML={{ __html: result.explanation }} />
           </Text>
-          <Text fontSize='md'>
+          <Text fontSize='md' mb={4}>
             <Text as='span' fontWeight='bold' color={labelColor}>
               {translations["result.advice_label"] || "Advice:"}
             </Text>
             <span dangerouslySetInnerHTML={{ __html: result.advice }} />
+          </Text>
+          <Text fontSize='md'>
+            <Text as='span' fontWeight='bold' color={labelColor}>
+              {translations["result.love_chain_label"] || "Love Chain:"}
+            </Text>
+            <span
+              dangerouslySetInnerHTML={{ __html: result.love_chain_info }}
+            />
           </Text>
         </Box>
       </Box>
