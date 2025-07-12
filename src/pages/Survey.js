@@ -9,14 +9,15 @@ import {
   Stack,
   Progress,
   Input,
+  Spinner,
 } from "@chakra-ui/react";
 import { useLanguage } from "../utils/LanguageContext";
 
 const Survey = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [freeTextAnswers, setFreeTextAnswers] = useState({}); // 주관식 답변
-  const [currentStep, setCurrentStep] = useState(0); // 현재 단계
+  const [freeTextAnswers, setFreeTextAnswers] = useState({});
+  const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -122,6 +123,7 @@ const Survey = () => {
     }
   };
 
+  // 로딩, 에러, 제출 상태에 따라 다른 UI를 반환
   if (loading) {
     return (
       <Center minH='100vh'>
@@ -139,6 +141,23 @@ const Survey = () => {
         <Button onClick={() => navigate("/")} mt={4}>
           {translations["survey.go_home_button"] || "Go to Home"}
         </Button>
+      </Center>
+    );
+  }
+
+  if (submitting) {
+    return (
+      <Center minH='100vh' flexDirection='column'>
+        <Spinner
+          size='xl'
+          thickness='4px'
+          speed='0.65s'
+          color='blue.500'
+          emptyColor='gray.200'
+        />
+        <Text mt={4} fontSize='xl' fontWeight='bold' textAlign='center'>
+          {translations["survey.submitting"] || "Submitting..."}
+        </Text>
       </Center>
     );
   }
@@ -280,7 +299,6 @@ const Survey = () => {
               colorScheme='green'
               size='lg'
               disabled={
-                submitting ||
                 !(
                   answers.hasOwnProperty(currentQuestion?.question) ||
                   freeTextAnswers.hasOwnProperty(
@@ -289,9 +307,7 @@ const Survey = () => {
                 )
               }
             >
-              {submitting
-                ? translations["survey.submitting"] || "Submitting..."
-                : translations["survey.submit_button"] || "View Result"}
+              {translations["survey.submit_button"] || "View Result"}
             </Button>
           )}
         </Stack>

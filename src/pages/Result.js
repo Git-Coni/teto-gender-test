@@ -39,14 +39,12 @@ const Result = () => {
     const allTypes = ["teto-boy", "teto-girl", "egen-boy", "egen-girl"];
     let translatedText = text;
 
-    // 모든 유형 이름에 대해 번역을 수행합니다.
     allTypes.forEach((t) => {
       const translatedTypeName = translations[`result.type.${t}`] || t;
       const regex = new RegExp(t, "g");
       translatedText = translatedText.replace(regex, translatedTypeName);
     });
 
-    // 마지막으로 줄바꿈을 <br> 태그로 변환합니다.
     return translatedText.replace(/\n/g, "<br>");
   };
 
@@ -86,7 +84,6 @@ const Result = () => {
             "Your Type"}
         </Heading>
         <Box textAlign='left'>
-          {/* 설명 섹션 */}
           <Heading
             as='h3'
             size='md'
@@ -104,7 +101,6 @@ const Result = () => {
             />
           </Text>
 
-          {/* 조언 섹션 */}
           <Heading
             as='h3'
             size='md'
@@ -122,7 +118,6 @@ const Result = () => {
             />
           </Text>
 
-          {/* 연예 섹션 */}
           <Heading
             as='h3'
             size='md'
