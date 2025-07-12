@@ -22,7 +22,9 @@ export const LanguageProvider = ({ children }) => {
     const fetchTranslations = async () => {
       try {
         // 저장된 번역을 서버에서 불러옵니다
-        const response = await fetch(`/api/i18n?lang=${lang}`);
+        const response = await fetch(
+          `https://coni.myds.me/api/translations?lang=${lang}`
+        );
         if (!response.ok) {
           throw new Error("번역 데이터를 불러오는 데 실패했습니다.");
         }
