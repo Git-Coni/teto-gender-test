@@ -64,9 +64,14 @@ const Result = () => {
       >
         <Heading as='h1' size='xl' mb={4} color={headingColor}>
           {translations[`result.${result.type}-title`] ||
-            translations["result.title"]}
+            translations["result.title"] ||
+            "Your Type Is..."}
         </Heading>
-        <Image src={imageUrl} alt={translations[resultTitleKey]} mb={6} />
+        <Image
+          src={imageUrl}
+          alt={translations[`result.${result.type}-title`]}
+          mb={6}
+        />
         <Box textAlign='left'>
           <Text fontSize='md' mb={4}>
             <Text as='span' fontWeight='bold' color={labelColor}>
