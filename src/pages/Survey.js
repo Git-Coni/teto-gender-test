@@ -163,7 +163,10 @@ const Survey = () => {
   }
 
   const currentQuestion = questions[`${currentStep}`];
-  const progressValue = ((currentStep + 1) / questions.length) * 100;
+  const progressValue =
+    questions.length > 0
+      ? ((currentStep + 1) / questions.length) * 100
+      : 0;
   const surveyTitleKey = `survey.question.${currentStep + 1}.title`;
 
   let optionsArray = [];
@@ -197,9 +200,11 @@ const Survey = () => {
         </Text>
 
         {/* 진행 표시기 */}
-        <Text mb={2} textAlign='center'>{`${currentStep + 1} / ${
-          questions.length
-        }`}</Text>
+        <Text mb={2} textAlign='center'>
+          {questions.length > 0
+            ? `${currentStep + 1} / ${questions.length}`
+            : "0 / 0"}
+        </Text>
         <Progress value={progressValue} size='sm' mb={6} />
 
         {currentQuestion ? (
