@@ -21,8 +21,10 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem("language", lang);
     const fetchTranslations = async () => {
       try {
-        // 저장된 번역을 서버에서 불러옵니다
-        const response = await fetch(`/api/i18n?lang=${lang}`);
+        // 상대 경로로 변경
+        const response = await fetch(
+          `https://coni.myds.me/api/translations?lang=${lang}`
+        );
         if (!response.ok) {
           throw new Error("번역 데이터를 불러오는 데 실패했습니다.");
         }
@@ -56,9 +58,9 @@ export const LanguageProvider = ({ children }) => {
             "Could not retrieve results. Please take the survey again.",
           "result.go_home_button": "Retake Survey",
           "result.save_button": "Save Result",
-          "result.copy_text": "Copy Text",
-          "result.save_image": "Save as Image",
-          "result.save_html": "Save as HTML",
+            "result.copy_text": "Copy Text",
+            "result.save_image": "Save as Image",
+            "result.save_html": "Save as HTML",
           "result.share_button": "Share",
           "result.share_copied": "Link copied to clipboard",
           "app.dark_mode_button": "Dark Mode",
