@@ -19,7 +19,6 @@ const Result = () => {
 
   const cardBg = useColorModeValue("white", "gray.700");
   const textColor = useColorModeValue("gray.600", "gray.400");
-  const headingColor = useColorModeValue("gray.800", "white");
   const labelColor = useColorModeValue("gray.800", "white");
   const headingColorValue = useColorModeValue("blue.500", "blue.300");
 
