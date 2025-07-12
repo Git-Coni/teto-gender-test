@@ -1,0 +1,27 @@
+/* 전역 CSS 변수 및 스타일 */
+:root {
+  --bg-color: #fff;
+  --text-color: #333;
+  --card-bg-color: #f9f9f9;
+  --button-color: #007bff;
+  --button-text-color: #fff;
+  --button-hover-color: #0056b3;
+}
+
+body.dark {
+  --bg-color: #1a202c;
+  --text-color: #f0f0f0;
+  --card-bg-color: #2d3748;
+  --button-color: #63b3ed;
+  --button-text-color: #1a202c;
+  --button-hover-color: #4299e1;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: sans-serif;
+}
