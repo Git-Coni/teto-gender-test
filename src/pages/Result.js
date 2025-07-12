@@ -6,6 +6,7 @@ import {
   Heading,
   Center,
   Button,
+  Stack,
   useColorModeValue,
   Image,
 } from "@chakra-ui/react";
@@ -47,6 +48,46 @@ const Result = () => {
     });
 
     return translatedText.replace(/\n/g, "<br>");
+  };
+
+  const handleSave = () => {
+    if (!result) return;
+    const data = JSON.stringify(result, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "result.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleShare = async () => {
+    if (!result) return;
+    const titleKey = `result.${result.type}-title`;
+    const title =
+      translations[titleKey] || translations["result.title"] || "Your Type";
+    const shareData = {
+      title,
+      text: title,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing", err);
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        alert(
+          translations["result.share_copied"] || "Link copied to clipboard"
+        );
+      } catch (err) {
+        console.error("Clipboard write failed", err);
+      }
+    }
   };
 
   if (!result) {
@@ -140,9 +181,22 @@ const Result = () => {
           </Text>
         </Box>
       </Box>
-      <Button mt={8} colorScheme='green' onClick={() => navigate("/")}>
-        {translations["result.go_home_button"] || "Retake Survey"}
-      </Button>
+      <Stack
+        mt={8}
+        spacing={4}
+        direction={{ base: "column", md: "row" }}
+        justify='center'
+      >
+        <Button colorScheme='blue' onClick={handleSave}>
+          {translations["result.save_button"] || "Save Result"}
+        </Button>
+        <Button colorScheme='teal' onClick={handleShare}>
+          {translations["result.share_button"] || "Share"}
+        </Button>
+        <Button colorScheme='green' onClick={() => navigate("/")}>
+          {translations["result.go_home_button"] || "Retake Survey"}
+        </Button>
+      </Stack>
     </Center>
   );
 };
