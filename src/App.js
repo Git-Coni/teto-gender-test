@@ -34,11 +34,16 @@ const AppContent = () => {
           <option value='vn'>Tiếng Việt</option>
         </select>
       </div>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/survey' element={<Survey />} />
-        <Route path='/result' element={<Result />} />
-      </Routes>
+      <div className='main-content'>
+        {" "}
+        {/* 이 부분을 추가했습니다 */}
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/survey' element={<Survey />} />
+          <Route path='/result' element={<Result />} />
+        </Routes>
+      </div>{" "}
+      {/* 이 부분을 추가했습니다 */}
     </div>
   );
 };
