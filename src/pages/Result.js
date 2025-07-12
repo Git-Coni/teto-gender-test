@@ -18,8 +18,13 @@ const Result = () => {
   const { result: stateResult } = location.state || {};
   let result = stateResult;
   if (!result) {
-    const params = new URLSearchParams(location.search);
-    const data = params.get("data");
+    let params = new URLSearchParams(location.search);
+    let data = params.get("data");
+    // In some hash-routing setups search may be empty, so also check the hash
+    if (!data && window.location.hash.includes("?")) {
+      params = new URLSearchParams(window.location.hash.split("?")[1]);
+      data = params.get("data");
+    }
     if (data) {
       try {
         result = JSON.parse(atob(data));
@@ -80,11 +85,11 @@ const Result = () => {
     const title =
       translations[titleKey] || translations["result.title"] || "Your Type";
     const encoded = btoa(JSON.stringify(result));
-    const baseUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
     const shareData = {
       title,
       text: title,
-      url: baseUrl,
+      url: shareUrl,
     };
     if (navigator.share) {
       try {
