@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Text,
-  Heading,
-  Stack,
-  Button,
-  Image,
   Center,
+  Heading,
+  Text,
+  Button,
+  Stack,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import { useLanguage } from "../utils/LanguageContext";
 
 const Home = () => {
-  const [selectedGender, setSelectedGender] = useState(null);
   const navigate = useNavigate();
-  const { translations } = useLanguage();
+  const { translations, isLoading } = useLanguage();
+  const [selectedGender, setSelectedGender] = useState(null);
+
+  const cardBg = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue("gray.600", "gray.400");
+  const headingColorValue = useColorModeValue("blue.500", "blue.300");
 
   const handleGenderSelect = (gender) => {
     setSelectedGender(gender);
@@ -25,41 +29,63 @@ const Home = () => {
     if (selectedGender) {
       navigate("/survey", { state: { gender: selectedGender } });
     } else {
-      alert(translations["home.gender_select_alert"]);
+      alert(
+        translations["home.gender_select_alert"] || "Please select a gender."
+      );
     }
   };
 
-  // 라이트 모드와 다크 모드 색상 값 정의
-  const boxBg = useColorModeValue("white", "gray.700");
-  const textColor = useColorModeValue("gray.600", "gray.400");
-  const headingColor = useColorModeValue("gray.800", "white");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
+  if (isLoading) {
+    return (
+      <Center minH='100vh'>
+        <Text>Loading...</Text>
+      </Center>
+    );
+  }
 
   return (
-    <Center minH='100vh' py={8} flexDirection='column' textAlign='center'>
+    <Center minH='100vh'>
       <Box
         p={8}
-        maxW='md'
+        // 외곽 박스의 크기를 더 크게 조정했습니다.
+        px={{ base: 4, sm: 8, md: 12 }}
+        py={{ base: 8, sm: 12, md: 16 }}
+        maxW='lg'
         borderWidth='1px'
         borderRadius='lg'
-        overflow='hidden'
+        bg={cardBg}
         boxShadow='xl'
-        bg={boxBg}
+        textAlign='center'
         color={textColor}
-        borderColor={borderColor}
       >
-        <Heading as='h1' size='xl' mb={4} color={headingColor}>
+        <Image
+          // 이미지 경로를 기존의 올바른 경로로 수정했습니다.
+          src={`${process.env.PUBLIC_URL}/teto_en.png`}
+          alt={translations["home.title"]}
+          // 이미지 크기를 더 크게 조정하여 왜곡 없이 표시합니다.
+          height='auto'
+          width='100%'
+          maxW='250px'
+          mx='auto'
+          mb={4}
+          // 이미지 비율을 유지하면서 컨테이너에 맞춥니다.
+          objectFit='contain'
+        />
+        <Heading as='h1' size='xl' mb={2} color={headingColorValue}>
           {translations["home.title"]}
         </Heading>
-        <Text fontSize='md' color={textColor} mb={6}>
-          {translations["home.description"]}
+        <Text
+          fontSize='lg'
+          mt={2}
+          mb={4}
+          fontWeight='bold'
+          color={headingColorValue}
+        >
+          {translations["home.intro_ai_message"]}
         </Text>
-        <Image
-          src={process.env.PUBLIC_URL + "/teto_en.png"}
-          alt='Teto and Egen'
-          borderRadius='lg'
-          mb={6}
-        />
+        <Text fontSize='md' mb={6}>
+          {translations["home.subtitle"]}
+        </Text>
         <Stack
           spacing={4}
           direction='row'
@@ -72,14 +98,14 @@ const Home = () => {
             colorScheme={selectedGender === "male" ? "blue" : "gray"}
             w='50%'
           >
-            {translations["home.male_button"]}
+            {translations["home.male_button"] || "Male"}
           </Button>
           <Button
             onClick={() => handleGenderSelect("female")}
             colorScheme={selectedGender === "female" ? "blue" : "gray"}
             w='50%'
           >
-            {translations["home.female_button"]}
+            {translations["home.female_button"] || "Female"}
           </Button>
         </Stack>
         <Button
@@ -89,7 +115,7 @@ const Home = () => {
           w='100%'
           disabled={!selectedGender}
         >
-          {translations["home.start_button"]}
+          {translations["home.start_button"] || "Start"}
         </Button>
       </Box>
     </Center>
