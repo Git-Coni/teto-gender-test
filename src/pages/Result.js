@@ -15,7 +15,24 @@ import { useLanguage } from "../utils/LanguageContext";
 const Result = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { result } = location.state || {};
+  const { result: stateResult } = location.state || {};
+  let result = stateResult;
+  if (!result) {
+    let params = new URLSearchParams(location.search);
+    let data = params.get("data");
+    // In some hash-routing setups search may be empty, so also check the hash
+    if (!data && window.location.hash.includes("?")) {
+      params = new URLSearchParams(window.location.hash.split("?")[1]);
+      data = params.get("data");
+    }
+    if (data) {
+      try {
+        result = JSON.parse(atob(data));
+      } catch (err) {
+        console.error("Failed to decode shared result", err);
+      }
+    }
+  }
   const { translations } = useLanguage();
 
   const cardBg = useColorModeValue("white", "gray.700");
@@ -67,10 +84,12 @@ const Result = () => {
     const titleKey = `result.${result.type}-title`;
     const title =
       translations[titleKey] || translations["result.title"] || "Your Type";
+    const encoded = btoa(JSON.stringify(result));
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
     const shareData = {
       title,
       text: title,
-      url: window.location.href,
+      url: shareUrl,
     };
     if (navigator.share) {
       try {
