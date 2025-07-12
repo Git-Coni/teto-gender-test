@@ -77,6 +77,7 @@ const Result = () => {
     return translatedText.replace(/\n/g, "<br>");
   };
 
+  // useRef 훅을 사용하여 DOM 요소를 참조합니다.
   const resultRef = useRef(null);
 
   const copyText = async () => {
@@ -88,14 +89,15 @@ const Result = () => {
       "Your Type";
     const explanationLabel =
       translations["result.explanation_label"] || "Explanation";
-    const adviceLabel =
-      translations["result.advice_label"] || "Advice";
-    const romanceLabel =
-      translations["result.romance_label"] || "Romance";
+    const adviceLabel = translations["result.advice_label"] || "Advice";
+    const romanceLabel = translations["result.romance_label"] || "Romance";
     textParts.push(title);
     textParts.push("\n" + explanationLabel);
     textParts.push(
-      formatAndTranslateText(result.explanation, result.type).replace(/<br>/g, "\n")
+      formatAndTranslateText(result.explanation, result.type).replace(
+        /<br>/g,
+        "\n"
+      )
     );
     textParts.push("\n" + adviceLabel);
     textParts.push(
@@ -103,7 +105,10 @@ const Result = () => {
     );
     textParts.push("\n" + romanceLabel);
     textParts.push(
-      formatAndTranslateText(result.love_chain_info, result.type).replace(/<br>/g, "\n")
+      formatAndTranslateText(result.love_chain_info, result.type).replace(
+        /<br>/g,
+        "\n"
+      )
     );
     const text = textParts.join("\n\n");
     try {
@@ -150,7 +155,9 @@ const Result = () => {
       translations[titleKey] || translations["result.title"] || "Your Type";
     const json = JSON.stringify(result);
     const encoded = btoa(unescape(encodeURIComponent(json)));
-    const shareUrl = `${window.location.origin}${window.location.pathname}#/result?data=${encodeURIComponent(encoded)}`;
+    const shareUrl = `${window.location.origin}${
+      window.location.pathname
+    }#/result?data=${encodeURIComponent(encoded)}`;
     const shareData = {
       title,
       text: title,
@@ -193,6 +200,7 @@ const Result = () => {
   return (
     <Center minH='100vh' py={8} flexDirection='column' textAlign='center'>
       <Box
+        ref={resultRef} // 이 부분을 추가했습니다.
         p={8}
         maxW='2xl'
         borderWidth='1px'
@@ -292,4 +300,3 @@ const Result = () => {
 };
 
 export default Result;
-
