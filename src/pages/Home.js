@@ -55,7 +55,7 @@ const Home = () => {
           {translations["home.description"]}
         </Text>
         <Image
-          src='/teto_en.png'
+          src={process.env.PUBLIC_URL + "/teto_en.png"}
           alt='Teto and Egen'
           borderRadius='lg'
           mb={6}

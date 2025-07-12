@@ -95,7 +95,7 @@ const Survey = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/evaluate`, {
+      const response = await fetch(`https://coni.myds.me/api/evaluate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
