@@ -29,6 +29,7 @@ const Result = () => {
     "teto-boy": "teto-boy.png",
     "teto-girl": "teto-girl.png",
   };
+
   const imageUrl = result
     ? process.env.PUBLIC_URL + "/images/" + typeToImage[result.type]
     : "";
@@ -62,16 +63,12 @@ const Result = () => {
         boxShadow='xl'
         color={textColor}
       >
-        <Heading as='h1' size='xl' mb={4} color={headingColor}>
-          {translations[`result.${result.type}-title`] ||
+        <Image src={imageUrl} alt={translations[resultTitleKey]} mb={6} />
+        <Heading as='h2' size='lg' mb={4} color={headingColorValue}>
+          {translations[resultTitleKey] ||
             translations["result.title"] ||
-            "Your Type Is..."}
+            "Your Type"}
         </Heading>
-        <Image
-          src={imageUrl}
-          alt={translations[`result.${result.type}-title`]}
-          mb={6}
-        />
         <Box textAlign='left'>
           <Text fontSize='md' mb={4}>
             <Text as='span' fontWeight='bold' color={labelColor}>
