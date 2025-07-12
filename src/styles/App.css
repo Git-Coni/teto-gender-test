@@ -36,7 +36,7 @@ body.dark .lang-select {
   border-color: #555;
 }
 
-/* 메인 콘텐츠 상단 여백 추가 */
+/* 메인 콘텐츠 상단 여백을 조정했습니다. */
 .main-content {
-  padding-top: 6rem; /* 버튼 높이와 여백을 고려한 값 */
+  padding-top: 5rem;
 }

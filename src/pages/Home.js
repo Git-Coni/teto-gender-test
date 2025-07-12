@@ -44,10 +44,9 @@ const Home = () => {
   }
 
   return (
-    <Center minH='100vh'>
+    <Center>
       <Box
         p={8}
-        // 외곽 박스의 크기를 더 크게 조정했습니다.
         px={{ base: 4, sm: 8, md: 12 }}
         py={{ base: 8, sm: 12, md: 16 }}
         maxW='lg'
@@ -59,16 +58,13 @@ const Home = () => {
         color={textColor}
       >
         <Image
-          // 이미지 경로를 기존의 올바른 경로로 수정했습니다.
           src={`${process.env.PUBLIC_URL}/teto_en.png`}
           alt={translations["home.title"]}
-          // 이미지 크기를 더 크게 조정하여 왜곡 없이 표시합니다.
           height='auto'
           width='100%'
           maxW='250px'
           mx='auto'
           mb={4}
-          // 이미지 비율을 유지하면서 컨테이너에 맞춥니다.
           objectFit='contain'
         />
         <Heading as='h1' size='xl' mb={2} color={headingColorValue}>
