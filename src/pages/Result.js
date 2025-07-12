@@ -53,11 +53,6 @@ const Result = () => {
 
   return (
     <Center minH='100vh' py={8} flexDirection='column' textAlign='center'>
-      <Heading as='h1' size='xl' mb={4} color={headingColor}>
-        {translations[resultTitleKey] ||
-          translations["result.title"] ||
-          "Your Type Is..."}
-      </Heading>
       <Box
         p={8}
         maxW='2xl'
@@ -67,10 +62,11 @@ const Result = () => {
         boxShadow='xl'
         color={textColor}
       >
-        <Image src={imageUrl} alt={translations[resultTitleKey]} mb={6} />
-        <Heading as='h2' size='lg' mb={4} color={headingColorValue}>
-          {result.type}
+        <Heading as='h1' size='xl' mb={4} color={headingColor}>
+          {translations[`result.${result.type}-title`] ||
+            translations["result.title"]}
         </Heading>
+        <Image src={imageUrl} alt={translations[resultTitleKey]} mb={6} />
         <Box textAlign='left'>
           <Text fontSize='md' mb={4}>
             <Text as='span' fontWeight='bold' color={labelColor}>
